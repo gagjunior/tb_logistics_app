@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Senha',
+                      labelStyle: TextStyle(fontSize: 20),
                       hintText: 'Digite sua senha'),
                 ),
               ),
