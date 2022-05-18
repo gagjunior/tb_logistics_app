@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tb_logistics_app/pages/travels_list_page.dart';
 
 void main() {
   runApp(const TbLogisticsApp());
@@ -56,28 +57,29 @@ class _HomePageState extends State<HomePage> {
                     )),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 500,
               child: Padding(
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
-                  decoration: InputDecoration(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: TextFormField(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Placa',
+                      labelStyle: TextStyle(fontSize: 20),
                       hintText: 'Digite sua placa'),
                 ),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: 500,
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TextField(
+                child: TextFormField(
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Senha',
                       labelStyle: TextStyle(fontSize: 20),
@@ -100,9 +102,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const HomePage(
-                                title: 'Teste',
-                              )));
+                          builder: (_) => const TravelListPage()));
                 },
                 child: const Text(
                   'Acessar',
