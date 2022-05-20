@@ -12,7 +12,7 @@ class _TravelListPageState extends State<TravelListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Liberações'),
+        title: const Text('Lista de Liberações'),
         automaticallyImplyLeading: false,
       ),
     );
