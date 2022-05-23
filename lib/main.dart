@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:tb_logistics_app/pages/home_page.dart';
+import 'package:tb_logistics_app/pages/login.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -21,7 +21,7 @@ class TbLogisticsApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue.shade800,
       ),
-      home: const HomePage(title: 'Tb Transportes'),
+      home: const LoginPage(),
     );
   }
 }

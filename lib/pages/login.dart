@@ -7,15 +7,14 @@ const SizedBox spacer = SizedBox(
   height: 20,
 );
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController _placaController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _showPassword = true;
@@ -44,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 60.0),
+              padding: const EdgeInsets.only(top: 60.0),
               child: Center(
                 child: SizedBox(
                     width: 200,
@@ -55,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     child: Image.asset('images/icone_logo_cbb.png')),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
             SizedBox(
@@ -64,14 +63,23 @@ class _HomePageState extends State<HomePage> {
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  cursorColor: Colors.yellow[800],
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
                   autofocus: true,
                   controller: _placaController,
                   keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Placa',
-                      labelStyle: TextStyle(fontSize: 20),
-                      hintText: 'Digite sua placa'),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Placa',
+                    labelStyle: TextStyle(fontSize: 20),
+                    hintText: 'Digite sua placa',
+                    prefix: Icon(
+                      Icons.abc_rounded,
+                      color: Colors.blue[400],
+                      size: 30,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -83,14 +91,22 @@ class _HomePageState extends State<HomePage> {
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
+                  cursorColor: Colors.yellow[800],
                   controller: _passwordController,
                   obscureText: _showPassword,
                   keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  textAlign: TextAlign.center,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     labelText: 'Senha',
-                    labelStyle: TextStyle(fontSize: 20),
+                    labelStyle: const TextStyle(fontSize: 20),
                     hintText: 'Digite sua senha',
+                    prefix: Icon(
+                      Icons.password_rounded,
+                      color: Colors.blue[400],
+                      size: 30,
+                    ),
                     suffix: IconButton(
                       icon: Icon(
                         !_showPassword ? Icons.lock : Icons.lock,
@@ -116,8 +132,26 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: TextButton(
+              child: ElevatedButton(
+                style: ButtonStyle(backgroundColor:
+                    MaterialStateProperty.resolveWith((states) {
+                  if (states.contains(MaterialState.hovered)) {
+                    return Colors.blue[900];
+                  }
+                })),
                 onPressed: () {
+                  if (_placaController.text == '') {
+                    _showDialogLogin(
+                        'Erro de Placa', 'Placa não pode estar em branco!');
+                    return;
+                  }
+                  if (_passwordController.text == '') {
+                    _showDialogLogin(
+                        'Erro de Senha', 'Senha não pode estar em branco');
+                    return;
+                  }
+                  compareCredentialSaved(
+                      _placaController.text, _passwordController.text);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -140,5 +174,43 @@ class _HomePageState extends State<HomePage> {
     String placa = await credentialBox.get('placa');
     String password = await credentialBox.get('password');
     return [placa, password];
+  }
+
+  void compareCredentialSaved(String placa, String password) async {
+    Box credentialBox = await Hive.openBox('credentialBox');
+    String? placaSaved;
+    String? passwordSaved;
+    await getLocalCredential().then((value) {
+      placaSaved = value[0];
+      passwordSaved = value[1];
+    });
+    if (placa != placaSaved || password != passwordSaved) {
+      credentialBox
+          .putAll({'placa': placa.toUpperCase(), 'password': password});
+    }
+  }
+
+  void _showDialogLogin(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        actionsOverflowButtonSpacing: 6,
+        title: Text(title),
+        titleTextStyle: TextStyle(
+          color: Colors.blue[800],
+          fontSize: 25,
+        ),
+        content: Text(content),
+        contentTextStyle: TextStyle(color: Colors.red, fontSize: 20),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Voltar'),
+          )
+        ],
+      ),
+    );
   }
 }
